@@ -17,8 +17,9 @@ final finalFilterProvider = Provider<List<AiTool>>((ref) {
   }
 
   // Filter for pricingType
-  if (draft.pricingType.isNotEmpty)
+  if (draft.pricingType.isNotEmpty) {
     tools.removeWhere((tool) => !draft.pricingType.contains(tool.pricingType));
+  }
 
   // Filter for SortType
   switch (draft.sortType) {

@@ -13,8 +13,8 @@ class AddFavoriteProviderClass extends AsyncNotifier<List<AiTool>> {
 
   Future<void> manageFavorite(AiTool aiTool, BuildContext context) async {
     List<AiTool> favorites = state.value ?? [];
-    final _isFavorite = favorites.any((tool) => tool.id == aiTool.id);
-    if (_isFavorite) {
+    final isFavorite = favorites.any((tool) => tool.id == aiTool.id);
+    if (isFavorite) {
       favorites = favorites.where((item) => item.id != aiTool.id).toList();
     } else if (favorites.length >= 20) {
       favorites.removeAt(19);
@@ -23,26 +23,28 @@ class AddFavoriteProviderClass extends AsyncNotifier<List<AiTool>> {
       favorites = [aiTool, ...favorites];
     }
     state = AsyncData(favorites);
-    Future<void> _persist(List<AiTool> favorites) async {
+    Future<void> persist(List<AiTool> favorites) async {
       final ids = favorites.map((item) => item.id).toList();
       await FavoriteRepository.setFavoriteIds(ids);
     }
 
-    await _persist(favorites);
+    await persist(favorites);
+
+    if(!context.mounted) return ;
 
     final messenger = ScaffoldMessenger.of(context);
     messenger.clearSnackBars();
     final snackBarController = messenger.showSnackBar(
       SnackBar(
         content: Text(
-          _isFavorite
+          isFavorite
               ? "${aiTool.name} removed from favorites"
               : "${aiTool.name} added to favorites",
         ),
         action: SnackBarAction(
           label: 'Undo',
           onPressed: () async {
-            if (_isFavorite) {
+            if (isFavorite) {
               favorites = [aiTool, ...favorites];
             } else {
               favorites = favorites
@@ -50,7 +52,7 @@ class AddFavoriteProviderClass extends AsyncNotifier<List<AiTool>> {
                   .toList();
             }
             state = AsyncData(favorites);
-            await _persist(favorites);
+            await persist(favorites);
           },
         ),
       ),
