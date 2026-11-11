@@ -16,14 +16,20 @@ class SettingListTile extends StatelessWidget {
         title: 'Rate AIStack',
         subtitle: 'Support us with a review',
         iconData: LucideIcons.star,
-        function: () {},
+        function: () {
+          launchTool(
+            "https://play.google.com/store/apps/details?id=com.mohdgulfam.aistack",
+          );
+        },
         color: theme.colorScheme.primary,
       ),
       ProfileAction(
         title: 'Share AIStack',
         subtitle: 'Share the app with your friends',
         iconData: LucideIcons.share2,
-        function: () {},
+        function: () { launchTool(
+            "https://play.google.com/store/apps/details?id=com.mohdgulfam.aistack",
+          );},
         color: theme.colorScheme.secondary,
       ),
       ProfileAction(
